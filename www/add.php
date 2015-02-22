@@ -1,6 +1,17 @@
 <?php
-include "simple_html_dom.php";
-$url = "http://www.youtube.com/watch?v=".$_POST["videoId"];
- echo file_get_html($url);
+require "../resources/VideoDAO.php";
+$videoDAO = new VideoDAO();
+$video = array("video_id"=>$_POST["videoId"],
+                "title"=>$_POST["title"],
+                "views"=>$_POST["views"],
+                "likes"=>$_POST["likes"],
+                "dislikes"=>$_POST["dislikes"],
+                "channel"=>$_POST["channel"]);
+try {
+    $videoDAO->addOrUpdate($video);
+} catch (VideoAlreadyAddedException $e) {
+    header("Location: index.php?exist=1");
+    return;
+}
+header("Location: index.php");
 
-//echo $document->find("#eow-title");

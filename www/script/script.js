@@ -4,14 +4,29 @@
 
 $(document).ready(function(){
 
-    /*page list.jsp*/
+    /*page index.php*/
 
     $("#addVideoButton").click(function(){
-        var empty = $("input[name=videoId]").val() == "";
-        if(!empty) {
-            var addVideoForm = $("#addVideoForm");
-            addVideoForm.attr("action","/add.php");
-            addVideoForm.submit();
+        var videoId = $("input[name=videoId]").val();
+        if(videoId) {
+            var url = "http://gdata.youtube.com/feeds/api/videos/"+videoId+"?v=2&alt=json";
+            var request = new XMLHttpRequest();
+            request.open("GET", url, false);
+            request.send();
+            if(request.status!=200){
+                alert("Invalid Video ID");
+                return;
+            }
+            $.getJSON(url,function(data){
+                $("input[name=title]").val(data.entry.title.$t);
+                $("input[name=views]").val(data.entry.yt$statistics.viewCount);
+                $("input[name=likes]").val(data.entry.yt$rating.numLikes);
+                $("input[name=dislikes]").val(data.entry.yt$rating.numDislikes);
+                $("input[name=channel]").val(data.entry.author[0].name.$t);
+                var addVideoForm = $("#addVideoForm");
+                addVideoForm.attr("action","/add.php");
+                addVideoForm.submit();
+            });
         }else alert("Please input videoID!");
     });
 
@@ -36,14 +51,17 @@ $(document).ready(function(){
             });
             tableForm.submit();
         }else alert("Please select just one row to be edited");
-
     });
 
     $('#refreshButton').click(function(){
         location.href = '/';
     });
 
-    /*page edit.jsp*/
+    setTimeout(function(){
+        $(".exist").fadeOut('slow');
+    },3000);
+
+    /*page edit.php*/
 
     $("#addButton").click(function(){
         addOrUpdate();

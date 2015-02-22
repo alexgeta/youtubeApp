@@ -1,5 +1,5 @@
 <?php
-include "VideoDAO.php";
+include "../resources/VideoDAO.php";
 
 $videoDAO = new VideoDAO();
 $video = array("id"=>$_POST["id"],

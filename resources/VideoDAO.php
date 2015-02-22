@@ -1,5 +1,5 @@
 <?php
-include "database.php";
+require "database.php";
 
 class VideoDAO {
 
@@ -29,10 +29,18 @@ class VideoDAO {
             return $PDOStatement->execute(array($video["video_id"],$video["title"],$video["views"],
                 $video["likes"],$video["dislikes"],$video["channel"],$video["id"]));
         }else {
+            $this->checkForExist($video["video_id"]);
             $sql = "INSERT INTO videos (video_id,title,views,likes,dislikes,channel) values (?,?,?,?,?,?)";
             $PDOStatement = $this->connection->prepare($sql);
             return $PDOStatement->execute(array($video["video_id"],$video["title"],$video["views"],
                 $video["likes"],$video["dislikes"],$video["channel"]));
+        }
+    }
+
+    private function checkForExist($videoId){
+        $sql = "SELECT * FROM videos WHERE video_id='$videoId'";
+        if($this->connection->query($sql)->rowCount()){
+            throw new VideoAlreadyAddedException();
         }
     }
 
@@ -42,4 +50,7 @@ class VideoDAO {
         $this->connection->query($sql);
     }
 
+}
+
+class VideoAlreadyAddedException extends Exception{
 }

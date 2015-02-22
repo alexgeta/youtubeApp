@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="script/script.js"></script>
     <title>Add/Edit Video</title>
 </head>
 <body>
@@ -11,7 +11,7 @@
 
     <div style="color: #861b0c; font-size: 30px">
         <?php
-        include "VideoDAO.php";
+        require "../resources/VideoDAO.php";
         if(!empty($_POST)){
             $videoDAO = new VideoDAO();
             $id = $_POST["id"][0];
@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td><label>Title</label></td>
-                <td><input name="title" value=<?php echo $video["title"]?>></td>
+                <td><input name="title" value="<?php echo $video["title"]?>"></td>
             </tr>
             <tr>
                 <td><label>Views</label></td>
